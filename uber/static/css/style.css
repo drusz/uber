@@ -1,0 +1,64 @@
+body {
+    background: #fafafa;
+    color: #444;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 14px;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+.main {
+    text-align: left;
+    width: 1024px;
+    margin: 10px auto 0;
+}
+form {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+form input[type='text'] {
+    width: 300px;
+    height: 24px;
+}
+form textarea {
+    width: 700px;
+    height: 200px;
+}
+form .control-group.error input[type='text'], form .control-group.error textarea {
+    border: 1px solid #ff0000;
+}
+form .control-group {
+    margin-bottom: 10px;
+}
+form .control-label {
+    float: left;
+    text-align: right;
+    width: 110px;
+    margin-top: 4px;
+}
+form .control {
+    margin-left: 120px;
+}
+form .control-errors {
+    color: #ff0000;
+    font-size: 12px;
+}
+.alert {
+    padding: 10px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+.alert.error {
+    background-color: #efdbdb;
+    color: #b64a48;
+    border: 1px solid #ebd0d4;
+    border-radius: 4px;
+}
+.alert.success {
+    background-color: #daebd3;
+    color: #498e4a;
+    border: 1px solid #d5e8c6;
+    border-radius: 4px;
+}

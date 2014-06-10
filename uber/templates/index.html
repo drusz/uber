@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Super Email Sender</h1>
+
+    <form method="POST" action="{{ url_for('index') }}">
+        {{ form.hidden_tag() }}
+        {{ form_field(form.from_email) }}
+        {{ form_field(form.to_email) }}
+        {{ form_field(form.subject) }}
+        {{ form_field(form.body) }}
+        <div class="control">
+            <input type="submit" value="Send" />
+        </div>
+    </form>
+{% endblock %}
+
+{% macro form_field(field) %}
+    <div class="control-group {% if field.errors %}error{% endif %}">
+        <label class="control-label">{{ field.label }}</label>
+        <div class="control">
+            {{ field() }}
+            <div class="control-errors">{% if field.errors %}{{ field.errors[0] }}{% endif %}</div>
+        </div>
+
+    </div>
+{%- endmacro %}
