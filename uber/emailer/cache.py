@@ -1,12 +1,17 @@
 from uber import cache
 
 
+DEFAULT_UNAVAILABILITY_TIMEOUT = 60
+
 def _unavailable_service_key(service_name):
     return 'unavailable-service-%s' % service_name
 
 
-def set_unavailable_service(service_name):
-    cache.set(_unavailable_service_key(service_name), 1, timeout=60)
+def set_unavailable_service(service_name, timeout=None):
+    if timeout is None:
+        timeout = DEFAULT_UNAVAILABILITY_TIMEOUT
+
+    cache.set(_unavailable_service_key(service_name), 1, timeout=timeout)
 
 
 def available_services(service_names):

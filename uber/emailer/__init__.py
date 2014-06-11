@@ -108,6 +108,8 @@ def send(from_email, to_email, subject, body):
             result = service.send(from_email, to_email, subject, body)
         except requests.RequestException:
             app.logger.exception('Network error sending to email service %s' % service_name)
+        except Exception:
+            app.logger.exception('Exception sending to email service %s' % service_name)
         else:
             if result:
                 app.logger.info('Successfully sent email using service %s' % service_name)
