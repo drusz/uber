@@ -18,11 +18,16 @@ class EmailerTestCase(UberTestCase):
     def setUp(self):
         super(EmailerTestCase, self).setUp()
 
-        emailer._all_services = {}
         self.fake_service = FakeEmailService()
         self.fake_service2 = SecondFakeEmailService()
 
+        self.orig_services = emailer._all_services
+
+        emailer._all_services = {}
         emailer._add_service(self.fake_service)
+
+    def tearDown(self):
+        emailer._all_services = self.orig_services
 
     def test_add_service(self):
         self.assertListEqual(sorted(emailer._all_services.values()),

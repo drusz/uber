@@ -9,8 +9,6 @@ class CacheTestCase(UberTestCase):
 
         cache.set_unavailable_service('test')
 
-        uber.app.logger.info(uber.cache.set.call_args)
-
         uber.cache.set.assert_called_with(key, 1, timeout=cache.DEFAULT_UNAVAILABILITY_TIMEOUT)
 
     def test_get_all_available_services(self):
@@ -38,3 +36,11 @@ class CacheTestCase(UberTestCase):
 
         result = cache.available_services(['test1', 'test2', 'test3', 'test4', 'test5', 'test6'])
         self.assertEqual(result, ['test2', 'test5'])
+
+    def test_no_available_services(self):
+        cache.set_unavailable_service('test1')
+        cache.set_unavailable_service('test2')
+
+        result = cache.available_services(['test1', 'test2'])
+
+        self.assertEqual(result, [])
