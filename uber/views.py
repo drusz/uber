@@ -11,8 +11,6 @@ from uber.emailer.forms import EmailForm
 def index():
     form = EmailForm()
 
-    recent_results = EmailServiceResult.objects.order_by('-timestamp').limit(20)
-
     if form.validate_on_submit():
         from_email = form.from_email.data
         to_email = form.to_email.data
@@ -25,5 +23,7 @@ def index():
             flash('Email sent!', 'success')
         else:
             flash('There was a problem sending your email! Please try again later.', 'error')
+
+    recent_results = EmailServiceResult.objects.order_by('-timestamp').limit(20)
 
     return render_template('index.html', form=form, recent_results=recent_results)
