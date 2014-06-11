@@ -3,12 +3,15 @@ from flask import flash
 
 from uber import app
 from uber import emailer
+from uber.models import *
 from uber.emailer.forms import EmailForm
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = EmailForm()
+
+    recent_results = EmailServiceResult.objects.order_by('-timestamp').limit(20)
 
     if form.validate_on_submit():
         from_email = form.from_email.data
@@ -23,4 +26,4 @@ def index():
         else:
             flash('There was a problem sending your email! Please try again later.', 'error')
 
-    return render_template('index.html', form=form)
+    return render_template('index.html', form=form, recent_results=recent_results)

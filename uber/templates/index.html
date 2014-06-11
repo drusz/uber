@@ -4,6 +4,8 @@
     <h1>Super Email Sender</h1>
 
     <form method="POST" action="{{ url_for('index') }}">
+        <h3>Welcome! Please fill in the following form to send an email:</h3>
+
         {{ form.hidden_tag() }}
         {{ form_field(form.from_email) }}
         {{ form_field(form.to_email) }}
@@ -13,6 +15,32 @@
             <input type="submit" value="Send" />
         </div>
     </form>
+
+    <h2>Recent Results</h2>
+    {% if recent_results %}
+        <table class="recent-results">
+            <tr>
+                <th>Status</th>
+                <th>Service</th>
+                <th>Date</th>
+            </tr>
+            {% for result in recent_results %}
+                <tr class="{% if result.success %}success{% else %}error{% endif %}">
+                    <td>
+                        {% if result.success %}Success{% else %}Failure{% endif %}
+                    </td>
+                    <td>
+                        {{ result.full_service_name }}
+                    </td>
+                    <td>
+                        {{ result.friendly_date }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        None yet, try sending an email above!
+    {% endif %}
 {% endblock %}
 
 {% macro form_field(field) %}
@@ -22,6 +50,5 @@
             {{ field() }}
             <div class="control-errors">{% if field.errors %}{{ field.errors[0] }}{% endif %}</div>
         </div>
-
     </div>
 {%- endmacro %}

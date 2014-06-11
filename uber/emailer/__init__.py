@@ -6,6 +6,7 @@ from flask import json
 
 import cache
 from uber import app
+from uber.models import EmailServiceResult
 
 
 _all_services = {}
@@ -16,6 +17,7 @@ class BaseEmailService(object):
     Simple base class that an email service implements.
     """
     name = None
+    full_name = None
 
     def __init__(self):
         pass
@@ -36,6 +38,7 @@ class BaseEmailService(object):
 
 class MailgunEmailService(BaseEmailService):
     name = 'mailgun'
+    full_name = 'Mailgun'
     _base_url = 'https://api.mailgun.net/v2'
 
     def send(self, from_email, to_email, subject, body):
@@ -60,6 +63,7 @@ class MailgunEmailService(BaseEmailService):
 
 class MandrillEmailService(BaseEmailService):
     name = 'mandrill'
+    full_name = 'Mandrill'
     _base_url = 'https://mandrillapp.com/api/1.0'
 
     def send(self, from_email, to_email, subject, body):
@@ -85,6 +89,10 @@ class MandrillEmailService(BaseEmailService):
         else:
             app.logger.error(resp.text)
             return False
+
+
+def get_service(service_name):
+    return _all_services.get(service_name)
 
 
 def send(from_email, to_email, subject, body):
@@ -113,12 +121,27 @@ def send(from_email, to_email, subject, body):
         else:
             if result:
                 app.logger.info('Successfully sent email using service %s' % service_name)
+                result = EmailServiceResult(service_name=service_name,
+                                            from_email=from_email,
+                                            to_email=to_email,
+                                            subject=subject,
+                                            body=body,
+                                            success=True)
+                result.save()
                 return True
             else:
                 app.logger.info('Failed to send email using service %s' % service_name)
 
         valid_services.remove(service_name)
         cache.set_unavailable_service(service_name)
+
+        result = EmailServiceResult(service_name=service_name,
+                                    from_email=from_email,
+                                    to_email=to_email,
+                                    subject=subject,
+                                    body=body,
+                                    success=False)
+        result.save()
 
     return False
 
