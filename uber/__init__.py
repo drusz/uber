@@ -10,7 +10,7 @@ app.config.from_object('settings')
 
 cache = MemcachedCache(['127.0.0.1:11211'])
 
-db = MongoEngine(app)
+db = MongoEngine()
 
 
 import models

@@ -5,12 +5,16 @@ from werkzeug.contrib.cache import SimpleCache
 
 import uber
 from uber import app
+from uber import db
 
 
 class UberTestCase(unittest.TestCase):
     def setUp(self):
+        app.config['MONGODB_SETTINGS'] = {'DB': 'uber_test'}
         app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
+
+        db.init_app(app)
 
         self.app = app.test_client()
 
