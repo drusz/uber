@@ -2,14 +2,18 @@ import random
 
 import requests
 
+from flask import Blueprint
+from flask import current_app
 from flask import json
 
 import cache
-from uber import app
-from uber.models import EmailServiceResult
+from models import EmailServiceResult
 
 
 _all_services = {}
+
+
+app = Blueprint('emailer', __name__)
 
 
 class BaseEmailService(object):
@@ -42,7 +46,7 @@ class MailgunEmailService(BaseEmailService):
     _base_url = 'https://api.mailgun.net/v2'
 
     def send(self, from_email, to_email, subject, body):
-        url = '%s/%s/messages' % (self._base_url, app.config['MAILGUN_DOMAIN'])
+        url = '%s/%s/messages' % (self._base_url, current_app.config['MAILGUN_DOMAIN'])
         data = {
             'from': from_email,
             'to': to_email,
@@ -51,13 +55,13 @@ class MailgunEmailService(BaseEmailService):
         }
 
         resp = requests.post(url, data=data,
-                             auth=('api', app.config['MAILGUN_API_KEY']),
+                             auth=('api', current_app.config['MAILGUN_API_KEY']),
                              timeout=3)
 
         if resp.status_code == 200:
             return True
         else:
-            app.logger.error(resp.text)
+            current_app.logger.error(resp.text)
             return False
 
 
@@ -69,7 +73,7 @@ class MandrillEmailService(BaseEmailService):
     def send(self, from_email, to_email, subject, body):
         url = '%s/messages/send.json' % self._base_url
         data = {
-            'key': app.config['MANDRILL_API_KEY'],
+            'key': current_app.config['MANDRILL_API_KEY'],
             'message': {
                 'from_email': from_email,
                 'to': [{
@@ -87,7 +91,7 @@ class MandrillEmailService(BaseEmailService):
         if resp.status_code == 200:
             return True
         else:
-            app.logger.error(resp.text)
+            current_app.logger.error(resp.text)
             return False
 
 
@@ -115,12 +119,12 @@ def send(from_email, to_email, subject, body):
         try:
             result = service.send(from_email, to_email, subject, body)
         except requests.RequestException:
-            app.logger.exception('Network error sending to email service %s' % service_name)
+            current_app.logger.exception('Network error sending to email service %s' % service_name)
         except Exception:
-            app.logger.exception('Exception sending to email service %s' % service_name)
+            current_app.logger.exception('Exception sending to email service %s' % service_name)
         else:
             if result:
-                app.logger.info('Successfully sent email using service %s' % service_name)
+                current_app.logger.info('Successfully sent email using service %s' % service_name)
                 result = EmailServiceResult(service_name=service_name,
                                             from_email=from_email,
                                             to_email=to_email,
@@ -130,7 +134,7 @@ def send(from_email, to_email, subject, body):
                 result.save()
                 return True
             else:
-                app.logger.info('Failed to send email using service %s' % service_name)
+                current_app.logger.info('Failed to send email using service %s' % service_name)
 
         valid_services.remove(service_name)
         cache.set_unavailable_service(service_name)

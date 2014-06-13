@@ -3,7 +3,6 @@ from mock import Mock
 import requests
 
 from tests import UberTestCase
-from uber import emailer
 
 
 class ViewsTestCase(UberTestCase):
@@ -20,7 +19,7 @@ class ViewsTestCase(UberTestCase):
         requests.post = self.orig_post
 
     def send_email(self, from_email, to_email, subject, body):
-        return self.app.post('/', data=dict(
+        return self.client.post('/', data=dict(
             from_email=from_email,
             to_email=to_email,
             subject=subject,

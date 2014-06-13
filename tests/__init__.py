@@ -4,19 +4,27 @@ from mock import Mock
 from werkzeug.contrib.cache import SimpleCache
 
 import uber
-from uber import app
-from uber import db
+from uber import create_app
 
 
 class UberTestCase(unittest.TestCase):
+    def __call__(self, *args, **kwargs):
+        self.app = create_app(settings_override={
+            'MONGODB_SETTINGS': {'DB': 'uber_test'},
+            'TESTING': True,
+            'WTF_CSRF_ENABLED': False
+        })
+
+        self.app_context = self.app.app_context()
+
+        try:
+            self.app_context.push()
+            super(UberTestCase, self).__call__(*args, **kwargs)
+        finally:
+            self.app_context.pop()
+
     def setUp(self):
-        app.config['MONGODB_SETTINGS'] = {'DB': 'uber_test'}
-        app.config['TESTING'] = True
-        app.config['WTF_CSRF_ENABLED'] = False
-
-        db.init_app(app)
-
-        self.app = app.test_client()
+        self.client = self.app.test_client()
 
         self.cache = SimpleCache()
 

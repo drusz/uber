@@ -3,7 +3,7 @@
 {% block content %}
     <h1>Super Email Sender</h1>
 
-    <form method="POST" action="{{ url_for('index') }}">
+    <form method="POST" action="{{ url_for('emailer.index') }}">
         <h3>Welcome! Please fill in the following form to send an email:</h3>
 
         {{ form.hidden_tag() }}
@@ -48,7 +48,7 @@
         <label class="control-label">{{ field.label }}</label>
         <div class="control">
             {{ field() }}
-            <div class="control-errors">{% if field.errors %}{{ field.errors[0] }}{% endif %}</div>
+            {% if field.errors %}<div class="control-errors">{{ field.errors[0] }}</div>{% endif %}
         </div>
     </div>
 {%- endmacro %}
