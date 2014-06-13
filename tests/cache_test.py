@@ -1,6 +1,7 @@
-from tests import UberTestCase
 import uber
-from uber.emailer import cache
+from uber.email import cache
+
+from tests import UberTestCase
 
 
 class CacheTestCase(UberTestCase):

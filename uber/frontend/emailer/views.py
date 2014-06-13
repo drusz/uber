@@ -1,11 +1,10 @@
 from flask import flash
 from flask import render_template
 
-from models import *
-
-from uber import emailer
-from uber.emailer import app
-from uber.emailer.forms import EmailForm
+from uber.email.models import *
+from uber import email
+from uber.frontend.emailer import app
+from uber.frontend.emailer.forms import EmailForm
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -18,7 +17,7 @@ def index():
         subject = form.subject.data
         body = form.body.data
 
-        success = emailer.send(from_email, to_email, subject, body)
+        success = email.send(from_email, to_email, subject, body)
 
         if success:
             flash('Email sent!', 'success')

@@ -1,19 +1,15 @@
 import random
 
-import requests
-
-from flask import Blueprint
 from flask import current_app
 from flask import json
 
-import cache
-from models import EmailServiceResult
+import requests
+
+from uber.email import cache
+from uber.email.models import *
 
 
 _all_services = {}
-
-
-app = Blueprint('emailer', __name__)
 
 
 class BaseEmailService(object):

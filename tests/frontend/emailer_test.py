@@ -2,12 +2,12 @@ from mock import Mock
 
 import requests
 
-from tests import UberTestCase
+from tests.frontend import FrontendAppTestCase
 
 
-class ViewsTestCase(UberTestCase):
+class EmailerTestCase(FrontendAppTestCase):
     def setUp(self):
-        super(ViewsTestCase, self).setUp()
+        super(EmailerTestCase, self).setUp()
 
         fake_resp = requests.Response()
         fake_resp.status_code = 200

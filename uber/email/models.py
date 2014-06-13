@@ -14,8 +14,8 @@ class EmailServiceResult(db.Document):
 
     @property
     def full_service_name(self):
-        from uber import emailer
-        service = emailer.get_service(self.service_name)
+        from uber import email
+        service = email.get_service(self.service_name)
         return service.full_name if service else 'unknown'
 
     @property

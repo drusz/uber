@@ -1,5 +1,12 @@
-from uber import create_app
+from werkzeug.serving import run_simple
+from werkzeug.wsgi import DispatcherMiddleware
+
+from uber import api, frontend
+
 
 if __name__ == '__main__':
-    app = create_app()
-    app.run(host='0.0.0.0')
+    application = DispatcherMiddleware(frontend.create_app(), {
+        '/api': api.create_app()
+    })
+
+    run_simple('0.0.0.0', 5000, application, use_reloader=True)
