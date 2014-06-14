@@ -1,9 +1,25 @@
 import unittest
 
+from flask.ext.mongoengine import MongoEngine
 from mock import Mock
 from werkzeug.contrib.cache import SimpleCache
 
+
 import uber
+from uber import factory
+from uber.queue import celery
+
+
+celery.conf.update({
+    'CELERY_ALWAYS_EAGER': True
+})
+
+TEST_SETTINGS = {
+    'DEBUG': False,
+    'TESTING': True,
+    'MONGODB_SETTINGS': {'DB': 'uber_test'},
+    'WTF_CSRF_ENABLED': False
+}
 
 
 class UberTestCase(unittest.TestCase):
@@ -23,7 +39,7 @@ class UberTestCase(unittest.TestCase):
         uber.cache.get_many = self.orig_get_many
 
 
-class UberAppTestCase(unittest.TestCase):
+class UberAppTestCase(UberTestCase):
     def __call__(self, *args, **kwargs):
         self.app = self.create_app()
 
@@ -35,11 +51,13 @@ class UberAppTestCase(unittest.TestCase):
         finally:
             self.app_context.pop()
 
-    def create_app(self):
-        raise NotImplementedError()
-
     def setUp(self):
+        super(UberAppTestCase, self).setUp()
+
         self.client = self.app.test_client()
+
+    def create_app(self):
+        return factory.create_app(__name__, settings_override=TEST_SETTINGS)
 
 
 if __name__ == '__main__':

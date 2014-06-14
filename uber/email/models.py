@@ -1,6 +1,7 @@
 import datetime
 
 from uber import db
+from uber.email import constants
 
 
 class EmailServiceResult(db.Document):
@@ -21,3 +22,9 @@ class EmailServiceResult(db.Document):
     @property
     def friendly_date(self):
         return self.timestamp.strftime('%B %d %Y %I:%M%p')
+
+
+class EmailStatus(db.Document):
+    timestamp = db.DateTimeField(default=datetime.datetime.now, required=True)
+    task_id = db.StringField(required=True)
+    status = db.IntField(default=constants.EMAIL_STATUS['pending'])
