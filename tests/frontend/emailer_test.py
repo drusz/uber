@@ -16,6 +16,8 @@ class EmailerTestCase(FrontendAppTestCase):
         requests.post = Mock(return_value=fake_resp)
 
     def tearDown(self):
+        super(EmailerTestCase, self).tearDown()
+
         requests.post = self.orig_post
 
     def send_email(self, from_email, to_email, subject, body):

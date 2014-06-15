@@ -1,7 +1,6 @@
 from flask import abort
 from flask.ext.restful import Resource
 
-from uber.email import constants
 from uber.email import models
 
 
@@ -10,8 +9,9 @@ class EmailStatus(Resource):
         email_status = models.EmailStatus.objects.get_or_404(task_id=task_id)
         if email_status:
             return {
+                'err': 0,
                 'task_id': task_id,
-                'status': constants.EMAIL_STATUS_LOOKUP[email_status.status]
+                'status': email_status.friendly_status
             }
 
         abort(404)

@@ -29,7 +29,8 @@ class EmailerService(Resource):
         if task:
             return {
                 'err': 0,
-                'task_id': task.id
+                'task_id': task.id,
+                'message': 'The email has been queued!'
             }
 
         return {

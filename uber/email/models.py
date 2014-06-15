@@ -28,3 +28,7 @@ class EmailStatus(db.Document):
     timestamp = db.DateTimeField(default=datetime.datetime.now, required=True)
     task_id = db.StringField(required=True)
     status = db.IntField(default=constants.EMAIL_STATUS['pending'])
+
+    @property
+    def friendly_status(self):
+        return constants.EMAIL_STATUS_LOOKUP[self.status]
