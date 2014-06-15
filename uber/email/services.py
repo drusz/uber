@@ -46,10 +46,10 @@ class MandrillEmailService(BaseEmailService):
                 'from_email': from_email,
                 'to': [{
                     'email': to_email
-                }]
-            },
-            'subject': subject,
-            'text': body
+                }],
+                'subject': subject,
+                'text': body
+            }
         }
 
         resp = requests.post(url, data=json.dumps(data),
