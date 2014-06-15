@@ -47,9 +47,9 @@ GET /api/1/email_status/:task_id
 
 #### Parameters
 
-| Name    | Type   | Description          |
-|---------|--------|----------------------|
-| task_id | string | The task id to check |
+| Name    | Type   | Description                |
+|---------|--------|----------------------------|
+| task_id | string | The email task id to check |
 
 #### Response
 
@@ -60,6 +60,8 @@ GET /api/1/email_status/:task_id
   "task_id": "e95e3e2a-8fa2-48d5-a0dc-900181aeac0b"
 }
 ```
+
+The status can either be `"pending"`, `"success"` or `"failure"`.
 
 #### Sample request
 
